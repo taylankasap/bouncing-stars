@@ -64,6 +64,7 @@ BouncingStars.Game.prototype = {
         star.destroy();
 
         if (this.stars.children.length === 0) {
+            BouncingStars.upgradePoints++;
             BouncingStars.level++;
             if (BouncingStars.level % 1 === 0) {
                 this.game.state.start('Shop');

@@ -9,11 +9,12 @@ BouncingStars.Shop.prototype = {
 			fill: '#fff',
 			align: 'center'
 		};
-		var t = this.game.add.text(this.game.width / 2, this.game.height / 2, text, style);
-		this.game.add.text(this.game.width / 2 - 100, 100, 'Upgrades');
-		t.anchor.set(0.5);
-		t.inputEnabled = true;
-    	t.events.onInputUp.add(this.increasePlayerSize, this);
+		this.upgradePointsText = this.game.add.text(this.game.width / 2, 100, 'Spend Upgrade Points: ' + BouncingStars.upgradePoints);
+		this.upgradePointsText.anchor.set(0.5);
+		this.scaleText = this.game.add.text(this.game.width / 2, this.game.height / 2, 'Size: ' + BouncingStars.playerUpgrades.scale.toFixed(1), style);
+		this.scaleText.anchor.set(0.5);
+		this.scaleText.inputEnabled = true;
+    	this.scaleText.events.onInputUp.add(this.increasePlayerSize, this);
 
 		// Next level text
 		var text = 'Next Level';
@@ -27,8 +28,18 @@ BouncingStars.Shop.prototype = {
 		t.inputEnabled = true;
     	t.events.onInputUp.add(this.nextLevel, this);
 	},
+	spendUpgrades: function () {
+		BouncingStars.upgradePoints -= 1;
+		this.upgradePointsText.setText('Spend Upgrade Points: ' + BouncingStars.upgradePoints);
+	},
 	increasePlayerSize: function () {
-		BouncingStars.playerUpgrades.scale += 0.1;
+		if (BouncingStars.upgradePoints === 0) {
+		    return;
+		}
+
+		this.spendUpgrades();
+		BouncingStars.playerUpgrades.scale = parseFloat(BouncingStars.playerUpgrades.scale + 0.1);
+		this.scaleText.setText('Size: ' + BouncingStars.playerUpgrades.scale.toFixed(1));
 	},
 	nextLevel: function () {
         this.game.state.start('Game');
