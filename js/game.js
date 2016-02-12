@@ -3,11 +3,13 @@ var BouncingStars = BouncingStars || {};
 BouncingStars.level = 1;
 
 BouncingStars.playerUpgrades = {
-    'scale': 1
+    'scale': 1,
+    'velocity': 1
 };
 
 BouncingStars.upgradePoints = 0;
 
+BouncingStars.playerVelocity = 300 + (BouncingStars.playerUpgrades.velocity * 100);
 BouncingStars.baseStarVelocity = 1500 + (BouncingStars.level * 10);
 
 BouncingStars.Game = function () {};
@@ -70,8 +72,17 @@ BouncingStars.Game.prototype = {
     },
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
-        BouncingStars.Player.x = BouncingStars.game.input.mousePointer.x;
-        BouncingStars.Player.y = BouncingStars.game.input.mousePointer.y;
+
+        // BouncingStars.Player.x = BouncingStars.game.input.mousePointer.x;
+        // BouncingStars.Player.y = BouncingStars.game.input.mousePointer.y;
+
+        this.game.physics.arcade.moveToPointer(BouncingStars.Player, BouncingStars.playerVelocity);
+
+        //  if it's overlapping the mouse, don't move any more
+        if (Phaser.Rectangle.contains(BouncingStars.Player.body, this.game.input.x, this.game.input.y))
+        {
+            BouncingStars.Player.body.velocity.setTo(0, 0);
+        }
 
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
     },
@@ -83,6 +94,7 @@ BouncingStars.Game.prototype = {
         if (this.stars.children.length === 0) {
             BouncingStars.upgradePoints++;
             BouncingStars.level++;
+            BouncingStars.playerVelocity = 300 + (BouncingStars.playerUpgrades.velocity * 100);
             BouncingStars.baseStarVelocity = 1500 + (BouncingStars.level * 10);
             if (BouncingStars.level % 1 === 0) {
                 this.game.state.start('Shop');
