@@ -13,17 +13,24 @@ BouncingStars.Shop.prototype = {
 
         // Upgrade scale
         var text = 'Scale +';
-        this.scaleText = this.game.add.text(this.game.width / 2, this.game.height / 2 - 100, 'Scale: ' + BouncingStars.playerUpgrades.scale.toFixed(1), style);
+        this.scaleText = this.game.add.text(this.game.width / 2, this.game.height / 2 - 200, 'Scale: ' + BouncingStars.upgrades.scale.toFixed(1), style);
         this.scaleText.anchor.set(0.5);
         this.scaleText.inputEnabled = true;
         this.scaleText.events.onInputUp.add(this.increasePlayerScale, this);
 
 		// Upgrade velocity
 		var text = 'Velocity +';
-		this.velocityText = this.game.add.text(this.game.width / 2, this.game.height / 2, 'Velocity: ' + BouncingStars.playerUpgrades.velocity.toFixed(1), style);
+		this.velocityText = this.game.add.text(this.game.width / 2, this.game.height / 2 - 100, 'Velocity: ' + BouncingStars.upgrades.velocity.toFixed(1), style);
 		this.velocityText.anchor.set(0.5);
 		this.velocityText.inputEnabled = true;
     	this.velocityText.events.onInputUp.add(this.increasePlayerVelocity, this);
+
+		// Upgrade time
+		var text = 'Time +';
+		this.timeText = this.game.add.text(this.game.width / 2, this.game.height / 2, 'Time: ' + BouncingStars.upgrades.time.toFixed(1), style);
+		this.timeText.anchor.set(0.5);
+		this.timeText.inputEnabled = true;
+    	this.timeText.events.onInputUp.add(this.increaseTime, this);
 
 		// Next level text
 		var text = 'Next Level';
@@ -47,8 +54,8 @@ BouncingStars.Shop.prototype = {
         }
 
         this.spendUpgrades();
-        BouncingStars.playerUpgrades.scale = parseFloat(BouncingStars.playerUpgrades.scale + 0.1);
-        this.scaleText.setText('Scale: ' + BouncingStars.playerUpgrades.scale.toFixed(1));
+        BouncingStars.upgrades.scale = parseFloat(BouncingStars.upgrades.scale + 0.1);
+        this.scaleText.setText('Scale: ' + BouncingStars.upgrades.scale.toFixed(1));
     },
 	increasePlayerVelocity: function () {
 		if (BouncingStars.upgradePoints === 0) {
@@ -56,8 +63,17 @@ BouncingStars.Shop.prototype = {
 		}
 
 		this.spendUpgrades();
-		BouncingStars.playerUpgrades.velocity = parseFloat(BouncingStars.playerUpgrades.velocity + 0.1);
-		this.velocityText.setText('Velocity: ' + BouncingStars.playerUpgrades.velocity.toFixed(1));
+		BouncingStars.upgrades.velocity = parseFloat(BouncingStars.upgrades.velocity + 0.1);
+		this.velocityText.setText('Velocity: ' + BouncingStars.upgrades.velocity.toFixed(1));
+	},
+	increaseTime: function () {
+		if (BouncingStars.upgradePoints === 0) {
+		    return;
+		}
+
+		this.spendUpgrades();
+		BouncingStars.upgrades.time = parseFloat(BouncingStars.upgrades.time + 1);
+		this.timeText.setText('Time: ' + BouncingStars.upgrades.time.toFixed(1));
 	},
 	nextLevel: function () {
         this.game.state.start('Game');

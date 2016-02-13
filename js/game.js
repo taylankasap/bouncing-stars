@@ -2,14 +2,15 @@ var BouncingStars = BouncingStars || {};
 
 BouncingStars.level = 1;
 
-BouncingStars.playerUpgrades = {
+BouncingStars.upgrades = {
     'scale': 1,
-    'velocity': 1
+    'velocity': 1,
+    'time': 10
 };
 
 BouncingStars.upgradePoints = 0;
 
-BouncingStars.playerVelocity = 300 + (BouncingStars.playerUpgrades.velocity * 100);
+BouncingStars.playerVelocity = 300 + (BouncingStars.upgrades.velocity * 100);
 BouncingStars.baseStarVelocity = 1500 + (BouncingStars.level * 10);
 
 BouncingStars.Game = function () {};
@@ -27,7 +28,7 @@ BouncingStars.Game.prototype = {
 
         BouncingStars.Player.frame = 4;
 
-        BouncingStars.Player.scale.setTo(BouncingStars.playerUpgrades.scale);
+        BouncingStars.Player.scale.setTo(BouncingStars.upgrades.scale);
 
         // Walls
         this.walls = BouncingStars.game.add.group();
@@ -68,7 +69,17 @@ BouncingStars.Game.prototype = {
             star.body.angularVelocity = (200 + Math.random() * 400) * this.game.rnd.pick([-1, 1]);
         }
 
-        this.game.time.events.add(Phaser.Timer.SECOND * 10, this.gameOver, this);
+
+        // this.stateStartTime = this.game.time.now;
+        this.timer = this.game.time.create();
+        this.timerEvent = this.timer.add(Phaser.Timer.SECOND * BouncingStars.upgrades.time, this.gameOver, this);
+        this.timer.start();
+
+        // Remaining time
+        var style = {
+            fill: '#ecf0f1'
+        };
+        this.remainingTimeText = this.game.add.text(50, 50, 'Remaining time: ' + BouncingStars.upgrades.time.toFixed(1), style);
     },
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
@@ -85,6 +96,11 @@ BouncingStars.Game.prototype = {
         }
 
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
+
+        console.log(this.timerEvent.delay);
+        console.log(this.timer.ms);
+        this.remainingTimeText.setText('Remaining time: ' + ((this.timerEvent.delay - this.timer.ms) / 1000).toFixed(1));
+        // this.remainingTimeText.setText('Remaining time: ' + (BouncingStars.upgrades.time - this.game.time.elapsedSecondsSince(this.stateStartTime)).toFixed(1));
     },
     collectStar: function (player, star) {
         BouncingStars.game.sound.play('collectSound');
@@ -94,7 +110,7 @@ BouncingStars.Game.prototype = {
         if (this.stars.children.length === 0) {
             BouncingStars.upgradePoints++;
             BouncingStars.level++;
-            BouncingStars.playerVelocity = 300 + (BouncingStars.playerUpgrades.velocity * 100);
+            BouncingStars.playerVelocity = 300 + (BouncingStars.upgrades.velocity * 100);
             BouncingStars.baseStarVelocity = 1500 + (BouncingStars.level * 10);
             if (BouncingStars.level % 1 === 0) {
                 this.game.state.start('Shop');
