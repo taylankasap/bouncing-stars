@@ -11,7 +11,7 @@ BouncingStars.Boot.prototype = {
     },
     create: function () {
         // Loading screen will have a white background
-        this.game.stage.backgroundColor = '#fff';
+        this.game.stage.backgroundColor = '#ecf0f1';
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 

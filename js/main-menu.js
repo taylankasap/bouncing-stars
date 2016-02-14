@@ -8,7 +8,7 @@ BouncingStars.MainMenu.prototype = {
 		var text = 'Tap to begin';
 		var style = {
 			font: '30px Arial',
-			fill: '#fff',
+			fill: '#ecf0f1',
 			align: 'center'
 		};
 		var t = this.game.add.text(this.game.width / 2, this.game.height / 2, text, style);
@@ -18,7 +18,7 @@ BouncingStars.MainMenu.prototype = {
 		text = 'Highest score: ' + this.highestScore;
 		style = {
 			font: '15px Arial',
-			fill: '#fff',
+			fill: '#ecf0f1',
 			align: 'center'
 		};
 
