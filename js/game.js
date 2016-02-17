@@ -97,10 +97,7 @@ BouncingStars.Game.prototype = {
 
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
 
-        console.log(this.timerEvent.delay);
-        console.log(this.timer.ms);
         this.remainingTimeText.setText('Remaining time: ' + ((this.timerEvent.delay - this.timer.ms) / 1000).toFixed(1));
-        // this.remainingTimeText.setText('Remaining time: ' + (BouncingStars.upgrades.time - this.game.time.elapsedSecondsSince(this.stateStartTime)).toFixed(1));
     },
     collectStar: function (player, star) {
         BouncingStars.game.sound.play('collectSound');
