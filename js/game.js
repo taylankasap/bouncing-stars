@@ -23,12 +23,12 @@ BouncingStars.Game.prototype = {
 
         this.game.physics.arcade.enable(BouncingStars.Player);
 
-        BouncingStars.Player.anchor.x = 0.5;
-        BouncingStars.Player.anchor.y = 0.5;
+        BouncingStars.Player.anchor.setTo(0.5, 0.5);
 
         BouncingStars.Player.frame = 4;
 
         BouncingStars.Player.scale.setTo(BouncingStars.upgrades.scale);
+        // BouncingStars.Player.body.allowRotation = false
 
         // Walls
         this.walls = BouncingStars.game.add.group();
@@ -87,7 +87,8 @@ BouncingStars.Game.prototype = {
         // BouncingStars.Player.x = BouncingStars.game.input.mousePointer.x;
         // BouncingStars.Player.y = BouncingStars.game.input.mousePointer.y;
 
-        this.game.physics.arcade.moveToPointer(BouncingStars.Player, BouncingStars.playerVelocity);
+        BouncingStars.Player.rotation = this.game.physics.arcade.moveToPointer(BouncingStars.Player, BouncingStars.playerVelocity) + Math.PI/2;
+        // BouncingStars.Player.rotation = this.game.physics.arcade.moveToPointer(BouncingStars.Player, 60, BouncingStars.game.input.mousePointer, 500);
 
         //  if it's overlapping the mouse, don't move any more
         if (Phaser.Rectangle.contains(BouncingStars.Player.body, this.game.input.x, this.game.input.y))
