@@ -24,11 +24,8 @@ BouncingStars.Game.prototype = {
         this.game.physics.arcade.enable(BouncingStars.Player);
 
         BouncingStars.Player.anchor.setTo(0.5, 0.5);
-
         BouncingStars.Player.frame = 4;
-
         BouncingStars.Player.scale.setTo(BouncingStars.upgrades.scale);
-        // BouncingStars.Player.body.allowRotation = false
 
         // Walls
         this.walls = BouncingStars.game.add.group();
@@ -70,7 +67,6 @@ BouncingStars.Game.prototype = {
         }
 
 
-        // this.stateStartTime = this.game.time.now;
         this.timer = this.game.time.create();
         this.timerEvent = this.timer.add(Phaser.Timer.SECOND * BouncingStars.upgrades.time, this.gameOver, this);
         this.timer.start();
@@ -84,13 +80,9 @@ BouncingStars.Game.prototype = {
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
 
-        // BouncingStars.Player.x = BouncingStars.game.input.mousePointer.x;
-        // BouncingStars.Player.y = BouncingStars.game.input.mousePointer.y;
+        BouncingStars.Player.rotation = this.game.physics.arcade.moveToPointer(BouncingStars.Player, BouncingStars.playerVelocity) + Math.PI / 2;
 
-        BouncingStars.Player.rotation = this.game.physics.arcade.moveToPointer(BouncingStars.Player, BouncingStars.playerVelocity) + Math.PI/2;
-        // BouncingStars.Player.rotation = this.game.physics.arcade.moveToPointer(BouncingStars.Player, 60, BouncingStars.game.input.mousePointer, 500);
-
-        //  if it's overlapping the mouse, don't move any more
+        // If it's overlapping the mouse, don't move any more
         if (Phaser.Rectangle.contains(BouncingStars.Player.body, this.game.input.x, this.game.input.y))
         {
             BouncingStars.Player.body.velocity.setTo(0, 0);
