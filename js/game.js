@@ -59,7 +59,8 @@ BouncingStars.Game.prototype = {
 
             star.body.velocity.setTo((BouncingStars.baseStarVelocity + Math.random() * BouncingStars.baseStarVelocity) * this.game.rnd.pick([-1, 1]), (BouncingStars.baseStarVelocity + Math.random() * BouncingStars.baseStarVelocity) * this.game.rnd.pick([-1, 1]));
 
-            star.body.bounce.setTo(0.5 + (BouncingStars.level * 0.001));
+            var bounce = Math.min(0.5 + (BouncingStars.level * 0.001), 0.95);
+            star.body.bounce.setTo(bounce);
 
             star.anchor.setTo(0.5);
 
