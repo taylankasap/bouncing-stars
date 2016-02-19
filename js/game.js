@@ -1,6 +1,6 @@
 var BouncingStars = BouncingStars || {};
 
-BouncingStars.level = 1;
+BouncingStars.level = 500;
 
 BouncingStars.upgrades = {
     'scale': 1,
@@ -67,6 +67,8 @@ BouncingStars.Game.prototype = {
             star.body.angularVelocity = (200 + Math.random() * 400) * this.game.rnd.pick([-1, 1]);
         }
 
+        BouncingStars.collectSound = BouncingStars.game.add.audio('collectSound');
+        BouncingStars.game.sound.setDecodedCallback([ BouncingStars.collectSound ], this.decodedSounds, this);
 
         this.timer = this.game.time.create();
         this.timerEvent = this.timer.add(Phaser.Timer.SECOND * BouncingStars.upgrades.time, this.gameOver, this);
@@ -77,6 +79,9 @@ BouncingStars.Game.prototype = {
             fill: '#ecf0f1'
         };
         this.remainingTimeText = this.game.add.text(50, 50, 'Remaining time: ' + BouncingStars.upgrades.time.toFixed(1), style);
+    },
+    decodedSounds: function () {
+        console.log('decoded');
     },
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
@@ -94,7 +99,8 @@ BouncingStars.Game.prototype = {
         this.remainingTimeText.setText('Remaining time: ' + ((this.timerEvent.delay - this.timer.ms) / 1000).toFixed(1));
     },
     collectStar: function (player, star) {
-        BouncingStars.game.sound.play('collectSound');
+        // BouncingStars.game.sound.play('collectSound');
+        BouncingStars.collectSound.play();
 
         star.destroy();
 

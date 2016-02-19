@@ -12,7 +12,7 @@ BouncingStars.Preload.prototype = {
         BouncingStars.game.load.image('wall', 'assets/wall.png');
         BouncingStars.game.load.image('star', 'assets/star.png');
         BouncingStars.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
-        BouncingStars.game.load.audio('collectSound', 'assets/collect.wav');
+        BouncingStars.game.load.audio('collectSound', 'assets/collect2.wav');
     },
     create: function () {
         this.state.start('MainMenu');
