@@ -100,6 +100,10 @@ BouncingStars.Game.prototype = {
         star.destroy();
 
         if (this.stars.children.length === 0) {
+            // Set new highscore
+            if (BouncingStars.level > localStorage.highestScore) {
+                localStorage.highestScore = BouncingStars.level;
+            }
             BouncingStars.upgradePoints++;
             BouncingStars.level++;
             BouncingStars.playerVelocity = 300 + (BouncingStars.upgrades.velocity * 100);

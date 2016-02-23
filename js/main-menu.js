@@ -1,5 +1,7 @@
 BouncingStars.MainMenu = function () {};
 
+localStorage.highestScore = localStorage.highestScore || 0;
+
 BouncingStars.MainMenu.prototype = {
 	create: function () {
 		this.game.stage.backgroundColor = '#2c3e50'
@@ -15,7 +17,7 @@ BouncingStars.MainMenu.prototype = {
 		t.anchor.set(0.5);
 
 		// Highest score
-		text = 'Highest score: ' + this.highestScore;
+		text = 'Highest score: ' + localStorage.highestScore;
 		style = {
 			font: '15px Arial',
 			fill: '#ecf0f1',
