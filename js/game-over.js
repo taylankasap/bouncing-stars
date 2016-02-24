@@ -15,15 +15,17 @@ BouncingStars.GameOver.prototype = {
 		t.anchor.set(0.5);
 
 		// Highest score
-		text = 'Highest score: ' + this.highestScore;
 		style = {
 			font: '15px Arial',
 			fill: '#ecf0f1',
 			align: 'center'
 		};
 
-		var h = this.game.add.text(this.game.width / 2, this.game.height / 2 + 50, text, style);
-		h.anchor.set(0.5);
+		var s = this.game.add.text(this.game.width / 2, this.game.height / 2 + 50, 'Your score: ' + (BouncingStars.level - 1), style);
+		s.anchor.set(0.5);
+
+        var h = this.game.add.text(this.game.width / 2, this.game.height / 2 + 75, 'Highest score: ' + localStorage.highestScore, style);
+        h.anchor.set(0.5);
 	},
 	update: function () {
 		if (this.game.input.activePointer.justPressed()) {
