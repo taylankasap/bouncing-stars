@@ -87,11 +87,7 @@ BouncingStars.Shop.prototype = {
     resetUpgrades: function () {
         BouncingStars.upgradePoints = BouncingStars.level - 1;
 
-        BouncingStars.upgrades = {
-            'scale': 1,
-            'velocity': 1,
-            'time': 10
-        };
+        BouncingStars.upgrades = cloneObject(BouncingStars.initialUpgrades);
 
         this.updateUpgradePointsText();
         this.updateScaleText();

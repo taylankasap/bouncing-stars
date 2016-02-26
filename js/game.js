@@ -2,11 +2,15 @@ var BouncingStars = BouncingStars || {};
 
 BouncingStars.level = 1;
 
-BouncingStars.upgrades = {
+BouncingStars.initialUpgrades = {
     'scale': 1,
     'velocity': 1,
     'time': 10
 };
+function cloneObject(obj) {
+    return JSON.parse(JSON.stringify(obj));
+}
+BouncingStars.upgrades = cloneObject(BouncingStars.initialUpgrades);
 
 BouncingStars.upgradePoints = 0;
 
@@ -116,6 +120,7 @@ BouncingStars.Game.prototype = {
         }
     },
     gameOver: function () {
-        this.game.state.start('GameOver');
+        this.game.state.start('Shop');
+        // this.game.state.start('GameOver');
     },
 };
