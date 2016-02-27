@@ -23,12 +23,6 @@ BouncingStars.Shop.prototype = {
         this.velocityText.inputEnabled = true;
         this.velocityText.events.onInputUp.add(this.increasePlayerVelocity, this);
 
-        // Upgrade time
-        this.timeText = this.game.add.text(this.game.width / 2, this.game.height / 2, 'Time: ' + BouncingStars.upgrades.time.toFixed(1), style);
-        this.timeText.anchor.set(0.5);
-        this.timeText.inputEnabled = true;
-        this.timeText.events.onInputUp.add(this.increaseTime, this);
-
         // Reset upgrades
         this.resetText = this.game.add.text(this.game.width / 2, this.game.height / 2 + 100, 'Reset Upgrades', style);
         this.resetText.anchor.set(0.5);
@@ -72,18 +66,6 @@ BouncingStars.Shop.prototype = {
     updateVelocityText: function () {
         this.velocityText.setText('Velocity: ' + BouncingStars.upgrades.velocity.toFixed(1));
     },
-    increaseTime: function () {
-        if (BouncingStars.upgradePoints === 0) {
-            return;
-        }
-
-        this.spendUpgrades();
-        BouncingStars.upgrades.time = parseFloat(BouncingStars.upgrades.time + 1);
-        this.updateTimeText();
-    },
-    updateTimeText: function () {
-        this.timeText.setText('Time: ' + BouncingStars.upgrades.time.toFixed(1));
-    },
     resetUpgrades: function () {
         BouncingStars.upgradePoints = BouncingStars.level - 1;
 
@@ -92,7 +74,6 @@ BouncingStars.Shop.prototype = {
         this.updateUpgradePointsText();
         this.updateScaleText();
         this.updateVelocityText();
-        this.updateTimeText();
     },
     nextLevel: function () {
         this.game.state.start('Game');
