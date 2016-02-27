@@ -14,7 +14,7 @@ BouncingStars.upgrades = cloneObject(BouncingStars.initialUpgrades);
 
 BouncingStars.upgradePoints = 0;
 
-BouncingStars.playerVelocity = 300 + (BouncingStars.upgrades.velocity * 100);
+BouncingStars.playerVelocity = 500 + (BouncingStars.upgrades.velocity * 150);
 BouncingStars.baseStarVelocity = 1500 + (BouncingStars.level * 10);
 
 BouncingStars.Game = function () {};
@@ -110,7 +110,7 @@ BouncingStars.Game.prototype = {
             }
             BouncingStars.upgradePoints++;
             BouncingStars.level++;
-            BouncingStars.playerVelocity = 300 + (BouncingStars.upgrades.velocity * 100);
+            BouncingStars.playerVelocity = 500 + (BouncingStars.upgrades.velocity * 150);
             BouncingStars.baseStarVelocity = 1500 + (BouncingStars.level * 10);
             if (BouncingStars.level % 1 === 0) {
                 this.game.state.start('Shop');
