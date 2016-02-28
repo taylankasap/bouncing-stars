@@ -49,7 +49,9 @@ BouncingStars.Shop.prototype = {
 
         this.spendUpgrades();
         BouncingStars.upgrades.scale = parseFloat(BouncingStars.upgrades.scale + 0.1);
+        BouncingStars.upgrades.velocity = parseFloat(BouncingStars.upgrades.velocity - 0.1);
         this.updateScaleText();
+        this.updateVelocityText();
     },
     updateScaleText: function () {
         this.scaleText.setText('Scale: ' + BouncingStars.upgrades.scale.toFixed(1));
