@@ -73,6 +73,25 @@ BouncingStars.Game.prototype = {
             star.body.angularVelocity = (200 + Math.random() * 400) * this.game.rnd.pick([-1, 1]);
         }
 
+        // Spawn upgrade runes every n levels
+        if (BouncingStars.level % 1 === 0) {
+            this.upgradeRunes = BouncingStars.game.add.group();
+            this.upgradeRunes.enableBody = true;
+
+            for (var i = 0; i < 1; i++) {
+                var upgradeRune = this.upgradeRunes.create(BouncingStars.game.world.randomX, BouncingStars.game.world.randomY, 'upgradeRune');
+                upgradeRune.body.collideWorldBounds = true;
+
+                upgradeRune.body.velocity.setTo((BouncingStars.baseStarVelocity + Math.random() * BouncingStars.baseStarVelocity) * this.game.rnd.pick([-1, 1]), (BouncingStars.baseStarVelocity + Math.random() * BouncingStars.baseStarVelocity) * this.game.rnd.pick([-1, 1]));
+
+                upgradeRune.body.bounce.setTo(1);
+
+                upgradeRune.anchor.setTo(0.5);
+
+                upgradeRune.body.angularVelocity = (200 + Math.random() * 400) * this.game.rnd.pick([-1, 1]);
+            }
+        }
+
         BouncingStars.collectSound = BouncingStars.game.add.audio('collectSound');
 
         this.timer = this.game.time.create();
@@ -87,6 +106,7 @@ BouncingStars.Game.prototype = {
     },
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
+        this.game.physics.arcade.collide(this.upgradeRunes, this.walls);
 
         BouncingStars.Player.rotation = this.game.physics.arcade.moveToPointer(BouncingStars.Player, BouncingStars.playerVelocity) + Math.PI / 2;
 
@@ -97,6 +117,7 @@ BouncingStars.Game.prototype = {
         }
 
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
+        this.game.physics.arcade.overlap(BouncingStars.Player, this.upgradeRunes, this.collectUpgradeRune, null, this);
 
         this.remainingTimeText.setText('Remaining time: ' + ((this.timerEvent.delay - this.timer.ms) / 1000).toFixed(1));
     },
@@ -118,6 +139,13 @@ BouncingStars.Game.prototype = {
                 this.game.state.start('Game');
             }
         }
+    },
+    collectUpgradeRune: function (player, upgradeRune) {
+        BouncingStars.collectSound.play();
+
+        upgradeRune.destroy();
+
+        BouncingStars.upgradePoints++;
     },
     gameOver: function () {
         this.game.state.start('Shop');
