@@ -1,6 +1,8 @@
 var BouncingStars = BouncingStars || {};
 
-BouncingStars.level = 1;
+if (typeof store.get('level') === 'undefined') {
+    store.set('level', 1);
+}
 
 BouncingStars.initialUpgrades = {
     'scale': 1,
@@ -10,19 +12,25 @@ BouncingStars.initialUpgrades = {
 function cloneObject(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
-BouncingStars.upgrades = cloneObject(BouncingStars.initialUpgrades);
+store.set('upgrades', cloneObject(BouncingStars.initialUpgrades));
 
-BouncingStars.upgradePoints = 0;
+if (typeof store.get('totalUpgradePoints') === 'undefined') {
+    store.set('totalUpgradePoints', 0);
+}
 
-BouncingStars.playerVelocity = BouncingStars.upgrades.velocity * 1000;
-BouncingStars.baseStarVelocity = 1500 + (BouncingStars.level * 10);
+if (typeof store.get('remainingUpgradePoints') === 'undefined') {
+    store.set('remainingUpgradePoints', 0);
+}
+
+BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
+BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
 
 BouncingStars.Game = function () {};
 
 BouncingStars.Game.prototype = {
     create: function () {
-        BouncingStars.playerVelocity = BouncingStars.upgrades.velocity * 1000;
-        BouncingStars.baseStarVelocity = 1500 + (BouncingStars.level * 10);
+        BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
+        BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
 
         // Create player
         BouncingStars.Player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'dude');
@@ -31,7 +39,7 @@ BouncingStars.Game.prototype = {
 
         BouncingStars.Player.anchor.setTo(0.5, 0.5);
         BouncingStars.Player.frame = 4;
-        BouncingStars.Player.scale.setTo(BouncingStars.upgrades.scale);
+        BouncingStars.Player.scale.setTo(store.get('upgrades.scale'));
 
         // Walls
         this.walls = BouncingStars.game.add.group();
@@ -59,13 +67,13 @@ BouncingStars.Game.prototype = {
         //  We will enable physics for any star that is created in this group
         this.stars.enableBody = true;
 
-        for (var i = 0; i < BouncingStars.level; i++) {
+        for (var i = 0; i < store.get('level'); i++) {
             var star = this.stars.create(BouncingStars.game.world.randomX, BouncingStars.game.world.randomY, 'star');
             star.body.collideWorldBounds = true;
 
             star.body.velocity.setTo((BouncingStars.baseStarVelocity + Math.random() * BouncingStars.baseStarVelocity) * this.game.rnd.pick([-1, 1]), (BouncingStars.baseStarVelocity + Math.random() * BouncingStars.baseStarVelocity) * this.game.rnd.pick([-1, 1]));
 
-            var bounce = Math.min(0.5 + (BouncingStars.level * 0.001), 0.95);
+            var bounce = Math.min(0.5 + (store.get('level') * 0.001), 0.95);
             star.body.bounce.setTo(bounce);
 
             star.anchor.setTo(0.5);
@@ -74,7 +82,7 @@ BouncingStars.Game.prototype = {
         }
 
         // Spawn upgrade runes every n levels
-        if (BouncingStars.level % 1 === 0) {
+        if (store.get('level') % 1 === 0) {
             this.upgradeRunes = BouncingStars.game.add.group();
             this.upgradeRunes.enableBody = true;
 
@@ -95,14 +103,14 @@ BouncingStars.Game.prototype = {
         BouncingStars.collectSound = BouncingStars.game.add.audio('collectSound');
 
         this.timer = this.game.time.create();
-        this.timerEvent = this.timer.add(Phaser.Timer.SECOND * BouncingStars.upgrades.time, this.gameOver, this);
+        this.timerEvent = this.timer.add(Phaser.Timer.SECOND * store.get('upgrades.time'), this.gameOver, this);
         this.timer.start();
 
         // Remaining time
         var style = {
             fill: '#ecf0f1'
         };
-        this.remainingTimeText = this.game.add.text(50, 50, 'Remaining time: ' + BouncingStars.upgrades.time.toFixed(1), style);
+        this.remainingTimeText = this.game.add.text(50, 50, 'Remaining time: ' + store.get('upgrades.time').toFixed(1), style);
     },
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
@@ -128,12 +136,13 @@ BouncingStars.Game.prototype = {
 
         if (this.stars.children.length === 0) {
             // Set new highscore
-            if (BouncingStars.level > localStorage.highestScore) {
-                localStorage.highestScore = BouncingStars.level;
+            if (store.get('level') > store.get('highestScore')) {
+                store.set('highestScore', store.get('level'));
             }
-            BouncingStars.upgradePoints++;
-            BouncingStars.level++;
-            if (BouncingStars.level % 1 === 0) {
+            store.set('totalUpgradePoints', store.get('totalUpgradePoints') + 1);
+            store.set('remainingUpgradePoints', store.get('remainingUpgradePoints') + 1);
+            store.set('level', store.get('level') + 1);
+            if (store.get('level') % 1 === 0) {
                 this.game.state.start('Shop');
             } else {
                 this.game.state.start('Game');
@@ -145,7 +154,8 @@ BouncingStars.Game.prototype = {
 
         upgradeRune.destroy();
 
-        BouncingStars.upgradePoints++;
+        store.set('totalUpgradePoints', store.get('totalUpgradePoints') + 1);
+        store.set('remainingUpgradePoints', store.get('remainingUpgradePoints') + 1);
     },
     gameOver: function () {
         this.game.state.start('Shop');
