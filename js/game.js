@@ -4,15 +4,17 @@ if (typeof store.get('level') === 'undefined') {
     store.set('level', 1);
 }
 
-BouncingStars.initialUpgrades = {
-    'scale': 1,
-    'velocity': 1,
-    'time': 10
-};
-function cloneObject(obj) {
-    return JSON.parse(JSON.stringify(obj));
+if (typeof store.get('upgrades.scale') === 'undefined') {
+    store.set('upgrades.scale', 1);
 }
-store.set('upgrades', cloneObject(BouncingStars.initialUpgrades));
+
+if (typeof store.get('upgrades.velocity') === 'undefined') {
+    store.set('upgrades.velocity', 1);
+}
+
+if (typeof store.get('upgrades.time') === 'undefined') {
+    store.set('upgrades.time', 10);
+}
 
 if (typeof store.get('totalUpgradePoints') === 'undefined') {
     store.set('totalUpgradePoints', 0);

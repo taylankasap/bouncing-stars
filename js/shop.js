@@ -49,7 +49,7 @@ BouncingStars.Shop.prototype = {
 
         this.spendUpgrades();
         store.set('upgrades.scale', parseFloat(store.get('upgrades.scale') + 0.1));
-        store.get('upgrades.velocity', parseFloat(store.get('upgrades.velocity') - 0.1));
+        store.set('upgrades.velocity', parseFloat(store.get('upgrades.velocity') - 0.1));
         this.updateScaleText();
         this.updateVelocityText();
     },
@@ -62,7 +62,7 @@ BouncingStars.Shop.prototype = {
         }
 
         this.spendUpgrades();
-        store.get('upgrades.velocity') = parseFloat(store.get('upgrades.velocity') + 0.1);
+        store.set('upgrades.velocity', parseFloat(store.get('upgrades.velocity') + 0.1));
         this.updateVelocityText();
     },
     updateVelocityText: function () {
@@ -71,7 +71,9 @@ BouncingStars.Shop.prototype = {
     resetUpgrades: function () {
         store.set('remainingUpgradePoints', store.get('totalUpgradePoints'));
 
-        store.set('upgrades', cloneObject(BouncingStars.initialUpgrades));
+        store.set('upgrades.scale', 1);
+        store.set('upgrades.velocity', 1);
+        store.set('upgrades.time', 10);
 
         this.updateUpgradePointsText();
         this.updateScaleText();
