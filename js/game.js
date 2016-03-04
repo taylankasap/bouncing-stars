@@ -31,6 +31,8 @@ BouncingStars.Game = function () {};
 
 BouncingStars.Game.prototype = {
     create: function () {
+        this.collectedUpgradeRuneCountInThisLevel = 0;
+
         BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
         BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
 
@@ -141,8 +143,10 @@ BouncingStars.Game.prototype = {
             if (store.get('level') > store.get('highestScore')) {
                 store.set('highestScore', store.get('level'));
             }
-            store.set('totalUpgradePoints', store.get('totalUpgradePoints') + 1);
-            store.set('remainingUpgradePoints', store.get('remainingUpgradePoints') + 1);
+
+            store.set('totalUpgradePoints', store.get('totalUpgradePoints') + 1 + this.collectedUpgradeRuneCountInThisLevel);
+            store.set('remainingUpgradePoints', store.get('remainingUpgradePoints') + 1 + this.collectedUpgradeRuneCountInThisLevel);
+
             store.set('level', store.get('level') + 1);
             if (store.get('level') % 1 === 0) {
                 this.game.state.start('Shop');
@@ -152,12 +156,10 @@ BouncingStars.Game.prototype = {
         }
     },
     collectUpgradeRune: function (player, upgradeRune) {
+        this.collectedUpgradeRuneCountInThisLevel++;
         BouncingStars.collectSound.play();
 
         upgradeRune.destroy();
-
-        store.set('totalUpgradePoints', store.get('totalUpgradePoints') + 1);
-        store.set('remainingUpgradePoints', store.get('remainingUpgradePoints') + 1);
     },
     gameOver: function () {
         this.game.state.start('Shop');
