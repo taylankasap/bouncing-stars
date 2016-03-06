@@ -24,10 +24,22 @@ BouncingStars.Shop.prototype = {
         this.velocityText.events.onInputUp.add(this.increasePlayerVelocity, this);
 
         // Reset upgrades
-        this.resetText = this.game.add.text(this.game.width / 2, this.game.height / 2 + 100, 'Reset Upgrades', style);
-        this.resetText.anchor.set(0.5);
-        this.resetText.inputEnabled = true;
-        this.resetText.events.onInputUp.add(this.resetUpgrades, this);
+        this.resetUpgradesText = this.game.add.text(this.game.width / 2, this.game.height / 2 + 100, 'Reset Upgrades', style);
+        this.resetUpgradesText.anchor.set(0.5);
+        this.resetUpgradesText.inputEnabled = true;
+        this.resetUpgradesText.events.onInputUp.add(this.resetUpgrades, this);
+
+        var dangerStyle = {
+            font: '30px Arial',
+            fill: '#c0392b',
+            align: 'center'
+        };
+
+        // Reset game progress
+        this.resetProgressText = this.game.add.text(this.game.width / 2, this.game.height / 2 + 200, 'Reset Progress', style);
+        this.resetProgressText.anchor.set(0.5);
+        this.resetProgressText.inputEnabled = true;
+        this.resetProgressText.events.onInputUp.add(this.resetProgress, this);
 
         // Next level text
         var t = this.game.add.text(this.game.width / 2, this.game.height - 100, 'Next Level', style);
@@ -78,6 +90,10 @@ BouncingStars.Shop.prototype = {
         this.updateUpgradePointsText();
         this.updateScaleText();
         this.updateVelocityText();
+    },
+    resetProgress: function () {
+        store.clear();
+        window.location.reload();
     },
     nextLevel: function () {
         this.game.state.start('Game');
