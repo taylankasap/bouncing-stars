@@ -46,29 +46,31 @@ BouncingStars.Game.prototype = {
         BouncingStars.Player.scale.setTo(store.get('upgrades.scale'));
 
         // Walls
+        // We need to make walls thick so the sprites won't come too close to world bounds
+        // It causes some issues https://github.com/taylankasap/phaserjs-bounce-issue
         this.walls = BouncingStars.game.add.group();
         this.walls.enableBody = true;
-        var wall = this.walls.create(0, 0, 'wall');
-        wall.width = 25;
+        var wall = this.walls.create(-175, 0, 'wall');
+        wall.width = 250;
         wall.height = this.game.world.height;
         wall.body.immovable = true;
-        var wall = this.walls.create(this.game.world.width - 25, 0, 'wall');
-        wall.width = 25;
+        var wall = this.walls.create(this.game.world.width - 75, 0, 'wall');
+        wall.width = 250;
         wall.height = this.game.world.height;
         wall.body.immovable = true;
-        var wall = this.walls.create(0, 0, 'wall');
+        var wall = this.walls.create(0, -175, 'wall');
         wall.width = this.game.world.width;
-        wall.height = 25;
+        wall.height = 250;
         wall.body.immovable = true;
-        var wall = this.walls.create(0, this.game.world.height - 25, 'wall');
+        var wall = this.walls.create(0, this.game.world.height - 75, 'wall');
         wall.width = this.game.world.width;
-        wall.height = 25;
+        wall.height = 250;
         wall.body.immovable = true;
 
         // Finally some stars to collect
         this.stars = BouncingStars.game.add.group();
 
-        //  We will enable physics for any star that is created in this group
+        // We will enable physics for any star that is created in this group
         this.stars.enableBody = true;
 
         for (var i = 0; i < store.get('level'); i++) {
