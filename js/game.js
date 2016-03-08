@@ -121,12 +121,12 @@ BouncingStars.Game.prototype = {
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
         this.game.physics.arcade.collide(this.upgradeRunes, this.walls);
+        this.game.physics.arcade.collide(BouncingStars.Player, this.walls);
 
         BouncingStars.Player.rotation = this.game.physics.arcade.moveToPointer(BouncingStars.Player, BouncingStars.playerVelocity) + Math.PI / 2;
 
         // If it's overlapping the mouse, don't move any more
-        if (Phaser.Rectangle.contains(BouncingStars.Player.body, this.game.input.x, this.game.input.y))
-        {
+        if (Phaser.Rectangle.contains(BouncingStars.Player.body, this.game.input.x, this.game.input.y)) {
             BouncingStars.Player.body.velocity.setTo(0, 0);
         }
 
