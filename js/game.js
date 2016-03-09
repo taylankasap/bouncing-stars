@@ -116,7 +116,7 @@ BouncingStars.Game.prototype = {
         var style = {
             fill: '#ecf0f1'
         };
-        this.remainingTimeText = this.game.add.text(50, 50, 'Remaining time: ' + store.get('upgrades.time').toFixed(1), style);
+        this.remainingTimeText = this.game.add.text(25, 25, 'Remaining time: ' + store.get('upgrades.time').toFixed(1), style);
     },
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
