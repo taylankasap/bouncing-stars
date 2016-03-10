@@ -87,8 +87,8 @@ BouncingStars.Game.prototype = {
             star.body.angularVelocity = (200 + Math.random() * 400) * this.game.rnd.pick([-1, 1]);
         }
 
-        // Spawn upgrade runes every n levels
-        if (store.get('level') % 1 === 0) {
+        // Spawn upgrade runes time to time (chances are 1/10)
+        if (this.game.rnd.pick([true, false, false, false, false, false, false, false, false, false])) {
             this.upgradeRunes = BouncingStars.game.add.group();
             this.upgradeRunes.enableBody = true;
 
@@ -146,8 +146,8 @@ BouncingStars.Game.prototype = {
                 store.set('highestScore', store.get('level'));
             }
 
-            store.set('totalUpgradePoints', store.get('totalUpgradePoints') + 1 + this.collectedUpgradeRuneCountInThisLevel);
-            store.set('remainingUpgradePoints', store.get('remainingUpgradePoints') + 1 + this.collectedUpgradeRuneCountInThisLevel);
+            store.set('totalUpgradePoints', store.get('totalUpgradePoints') + 1 + this.collectedUpgradeRuneCountInThisLevel * 10);
+            store.set('remainingUpgradePoints', store.get('remainingUpgradePoints') + 1 + this.collectedUpgradeRuneCountInThisLevel * 10);
 
             store.set('level', store.get('level') + 1);
             if (store.get('level') % 1 === 0) {
