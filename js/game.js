@@ -106,6 +106,27 @@ BouncingStars.Game.prototype = {
             }
         }
 
+        // Spawn massive stars time to time
+        if (this.game.rnd.pick([true, false, false, false])) {
+            this.massiveStars = BouncingStars.game.add.group();
+            this.massiveStars.enableBody = true;
+
+            for (var i = 0; i < 1; i++) {
+                var massiveStar = this.massiveStars.create(BouncingStars.game.world.centerX, BouncingStars.game.world.centerY, 'star');
+                massiveStar.scale.setTo(5);
+                massiveStar.body.collideWorldBounds = true;
+
+                massiveStar.body.velocity.setTo((0.3 * Math.random() * BouncingStars.baseStarVelocity) * this.game.rnd.pick([-1, 1]), (0.3 * (Math.random() * BouncingStars.baseStarVelocity)) * this.game.rnd.pick([-1, 1]));
+
+                massiveStar.body.bounce.setTo(1);
+
+                massiveStar.anchor.setTo(0.5);
+
+                massiveStar.body.angularVelocity = (200 + Math.random() * 400) * this.game.rnd.pick([-1, 1]);
+            }
+        }
+
+        BouncingStars.supernovaSound = BouncingStars.game.add.audio('supernovaSound');
         BouncingStars.collectSound = BouncingStars.game.add.audio('collectSound');
 
         this.timer = this.game.time.create();
@@ -132,6 +153,7 @@ BouncingStars.Game.prototype = {
 
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
         this.game.physics.arcade.overlap(BouncingStars.Player, this.upgradeRunes, this.collectUpgradeRune, null, this);
+        this.game.physics.arcade.overlap(this.massiveStars, this.walls, this.supernova, null, this);
 
         this.remainingTimeText.setText('Remaining time: ' + ((this.timerEvent.delay - this.timer.ms) / 1000).toFixed(1));
     },
@@ -163,8 +185,29 @@ BouncingStars.Game.prototype = {
 
         upgradeRune.destroy();
     },
+    supernova: function (massiveStar, wall) {
+        BouncingStars.supernovaSound.play();
+
+        this.stars.forEach(function (star) {
+            var distance = BouncingStars.game.physics.arcade.distanceBetween(star, massiveStar);
+
+            setTimeout(function () {
+                // Check if star is still alive
+                if (!star.alive) {
+                    return;
+                }
+
+                var angle = BouncingStars.game.physics.arcade.angleBetween(star, massiveStar);
+                var force = -3000;
+                star.body.velocity.x += Math.cos(angle) * force;
+                star.body.velocity.y += Math.sin(angle) * force;
+            }, distance);
+        });
+
+        massiveStar.kill();
+    },
     gameOver: function () {
         this.game.state.start('Shop');
         // this.game.state.start('GameOver');
-    },
+    }
 };

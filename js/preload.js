@@ -14,6 +14,7 @@ BouncingStars.Preload.prototype = {
         BouncingStars.game.load.image('upgradeRune', 'assets/upgrade-rune.png');
         BouncingStars.game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         BouncingStars.game.load.audio('collectSound', 'assets/collect.wav');
+        BouncingStars.game.load.audio('supernovaSound', 'assets/explosion.wav');
     },
     create: function () {
         this.state.start('MainMenu');
