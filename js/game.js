@@ -198,7 +198,7 @@ BouncingStars.Game.prototype = {
                 }
 
                 var angle = BouncingStars.game.physics.arcade.angleBetween(star, massiveStar);
-                var force = -3000;
+                var force = -1000;
                 star.body.velocity.x += Math.cos(angle) * force;
                 star.body.velocity.y += Math.sin(angle) * force;
             }, distance);
