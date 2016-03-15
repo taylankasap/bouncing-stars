@@ -27,8 +27,7 @@ if (typeof store.get('remainingUpgradePoints') === 'undefined') {
 BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
 BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
 
-var circle;
-var circleSprite;
+var shockwave;
 
 BouncingStars.Game = function () {};
 
@@ -191,30 +190,12 @@ BouncingStars.Game.prototype = {
     supernova: function (massiveStar, wall) {
         BouncingStars.supernovaSound.play();
 
+        shockwave = this.game.add.sprite(massiveStar.x, massiveStar.y, 'shockwave');
+        shockwave.anchor.setTo(0.5, 0.5);
+        shockwave.scale.setTo(0.1);
+        shockwave.alpha = 0.1;
 
-        // // Create BitmapData
-        // circle = this.game.add.bitmapData(300, 300);
-        // // Draw circle
-        // circle.ctx.fillStyle = '#999999';
-        // circle.ctx.beginPath();
-        // circle.ctx.arc(300, 200, 100, 0, Math.PI * 2, true);
-        // circle.ctx.closePath();
-        // circle.ctx.fill();
-        // // Put BitmapData in a Sprite
-        // circleSprite = this.game.add.sprite(massiveStar.x, massiveStar.y, circle);
-
-
-
-
-        circle = new PIXI.Graphics();
-        circle.lineStyle(2, 0xFF00FF);  //(thickness, color)
-        circle.drawCircle(0, 0, 10);   //(x,y,radius)
-        circle.endFill();
-        circleSprite = this.game.add.sprite(massiveStar.x, massiveStar.y, circle);
-
-
-        // stage.addChild(circle);
-        // circle = new Phaser.Circle(massiveStar.x, massiveStar.y, 64);
+        this.game.add.tween(shockwave.scale).to({ x: 20, y: 20 }, 2000, Phaser.Easing.Default, true);
 
         this.stars.forEach(function (star) {
             var distance = BouncingStars.game.physics.arcade.distanceBetween(star, massiveStar);
