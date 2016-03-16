@@ -27,13 +27,15 @@ if (typeof store.get('remainingUpgradePoints') === 'undefined') {
 BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
 BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
 
-var shockwave;
-
 BouncingStars.Game = function () {};
 
 BouncingStars.Game.prototype = {
     create: function () {
         this.collectedUpgradeRuneCountInThisLevel = 0;
+
+        // Shockwave created from massive star supernova
+        this.shockwaves = BouncingStars.game.add.group();
+        this.shockwaves.enableBody = true;
 
         BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
         BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
@@ -156,6 +158,7 @@ BouncingStars.Game.prototype = {
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
         this.game.physics.arcade.overlap(BouncingStars.Player, this.upgradeRunes, this.collectUpgradeRune, null, this);
         this.game.physics.arcade.overlap(this.massiveStars, this.walls, this.supernova, null, this);
+        this.game.physics.arcade.overlap(this.shockwaves, this.stars, this.shockwaveEffect, null, this);
 
         this.remainingTimeText.setText('Remaining time: ' + ((this.timerEvent.delay - this.timer.ms) / 1000).toFixed(1));
     },
@@ -190,33 +193,41 @@ BouncingStars.Game.prototype = {
     supernova: function (massiveStar, wall) {
         BouncingStars.supernovaSound.play();
 
-        shockwave = this.game.add.sprite(massiveStar.x, massiveStar.y, 'shockwave');
+        var shockwave = this.shockwaves.create(massiveStar.x, massiveStar.y, 'shockwave');
         shockwave.anchor.setTo(0.5, 0.5);
         shockwave.scale.setTo(0.1);
         shockwave.alpha = 0.1;
 
-        this.game.add.tween(shockwave.scale).to({ x: 20, y: 20 }, 2000, Phaser.Easing.Default, true);
-
-        this.stars.forEach(function (star) {
-            var distance = BouncingStars.game.physics.arcade.distanceBetween(star, massiveStar);
-
-            setTimeout(function () {
-                // Check if star is still alive
-                if (!star.alive) {
-                    return;
-                }
-
-                var angle = BouncingStars.game.physics.arcade.angleBetween(star, massiveStar);
-                var force = -1000;
-                star.body.velocity.x += Math.cos(angle) * force;
-                star.body.velocity.y += Math.sin(angle) * force;
-            }, distance);
+        var tween = this.game.add.tween(shockwave.scale).to({ x: 20, y: 20 }, 2000, Phaser.Easing.Default, true);
+        console.log(tween);
+        tween.onComplete.add(function () {
+            shockwave.destroy();
         });
+
+        // this.stars.forEach(function (star) {
+        //     var distance = BouncingStars.game.physics.arcade.distanceBetween(star, massiveStar);
+
+        //     setTimeout(function () {
+        //         // Check if star is still alive
+        //         if (!star.alive) {
+        //             return;
+        //         }
+
+        //         var angle = BouncingStars.game.physics.arcade.angleBetween(star, massiveStar);
+        //         var force = -1000;
+        //         star.body.velocity.x += Math.cos(angle) * force;
+        //         star.body.velocity.y += Math.sin(angle) * force;
+        //     }, distance);
+        // });
 
         massiveStar.kill();
     },
-    render: function () {
-        // this.game.debug.geom(circle, 'rgba(75,0,155,0.5)');
+    shockwaveEffect: function (shockwave, star) {
+        // var angle = BouncingStars.game.physics.arcade.angleBetween(star, massiveStar);
+        var angle = 3;
+        var force = -1000;
+        star.body.velocity.x += Math.cos(angle) * force;
+        star.body.velocity.y += Math.sin(angle) * force;
     },
     gameOver: function () {
         this.game.state.start('Shop');
