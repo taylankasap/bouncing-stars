@@ -59,6 +59,11 @@ BouncingStars.Shop.prototype = {
             return;
         }
 
+        // Velocity can't go below 0.5 (<= 0.51 because it's a float, & JavaScript)
+        if (store.get('upgrades.velocity') <= 0.51) {
+            return;
+        }
+
         this.spendUpgrades();
         store.set('upgrades.scale', parseFloat(store.get('upgrades.scale') + 0.1));
         store.set('upgrades.velocity', parseFloat(store.get('upgrades.velocity') - 0.1));
