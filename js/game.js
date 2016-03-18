@@ -116,8 +116,7 @@ BouncingStars.Game.prototype = {
             this.massiveStars.enableBody = true;
 
             for (var i = 0; i < 1; i++) {
-                var massiveStar = this.massiveStars.create(BouncingStars.game.world.centerX, BouncingStars.game.world.centerY, 'star');
-                massiveStar.scale.setTo(5);
+                var massiveStar = this.massiveStars.create(BouncingStars.game.world.centerX, BouncingStars.game.world.centerY, 'massiveStar');
                 massiveStar.body.collideWorldBounds = true;
 
                 massiveStar.body.velocity.setTo((0.3 * Math.random() * BouncingStars.baseStarVelocity) * this.game.rnd.pick([-1, 1]), (0.3 * (Math.random() * BouncingStars.baseStarVelocity)) * this.game.rnd.pick([-1, 1]));
