@@ -143,6 +143,7 @@ BouncingStars.Game.prototype = {
         this.remainingTimeText = this.game.add.text(25, 25, 'Remaining time: ' + store.get('upgrades.time').toFixed(1), style);
     },
     update: function () {
+        this.game.physics.arcade.collide(this.stars, this.shockwaves);
         this.game.physics.arcade.collide(this.stars, this.walls);
         this.game.physics.arcade.collide(this.upgradeRunes, this.walls);
         this.game.physics.arcade.collide(BouncingStars.Player, this.walls);
@@ -157,7 +158,7 @@ BouncingStars.Game.prototype = {
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
         this.game.physics.arcade.overlap(BouncingStars.Player, this.upgradeRunes, this.collectUpgradeRune, null, this);
         this.game.physics.arcade.overlap(this.massiveStars, this.walls, this.supernova, null, this);
-        this.game.physics.arcade.overlap(this.shockwaves, this.stars, this.shockwaveEffect, null, this);
+        // this.game.physics.arcade.overlap(this.shockwaves, this.stars, this.shockwaveEffect, null, this);
 
         this.remainingTimeText.setText('Remaining time: ' + ((this.timerEvent.delay - this.timer.ms) / 1000).toFixed(1));
     },
@@ -193,11 +194,14 @@ BouncingStars.Game.prototype = {
         BouncingStars.supernovaSound.play();
 
         var shockwave = this.shockwaves.create(massiveStar.x, massiveStar.y, 'shockwave');
+        shockwave.body.immovable = true;
+        shockwave.body.bounce.setTo(10);
         shockwave.anchor.setTo(0.5, 0.5);
         shockwave.scale.setTo(0.1);
         shockwave.alpha = 0.1;
+        console.log(shockwave);
 
-        var tween = this.game.add.tween(shockwave.scale).to({ x: 20, y: 20 }, 2000, Phaser.Easing.Default, true);
+        var tween = this.game.add.tween(shockwave.scale).to({ x: 20, y: 20 }, 10000, Phaser.Easing.Default, true);
         console.log(tween);
         tween.onComplete.add(function () {
             shockwave.destroy();
@@ -231,5 +235,8 @@ BouncingStars.Game.prototype = {
     gameOver: function () {
         this.game.state.start('Shop');
         // this.game.state.start('GameOver');
+    },
+    render: function () {
+        this.game.debug.body(this.shockwaves);
     }
 };
