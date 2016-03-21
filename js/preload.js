@@ -11,6 +11,7 @@ BouncingStars.Preload.prototype = {
         // Load game assets
         BouncingStars.game.load.image('wall', 'assets/wall.png');
         BouncingStars.game.load.image('star', 'assets/star.png');
+        BouncingStars.game.load.image('mine', 'assets/mine.png');
         BouncingStars.game.load.image('massiveStar', 'assets/massive-star.png');
         BouncingStars.game.load.image('upgradeRune', 'assets/upgrade-rune.png');
         BouncingStars.game.load.image('shockwave', 'assets/shockwave.png');

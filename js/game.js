@@ -26,6 +26,7 @@ if (typeof store.get('remainingUpgradePoints') === 'undefined') {
 
 BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
 BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
+BouncingStars.baseMineVelocity = BouncingStars.baseStarVelocity * 0.01;
 
 BouncingStars.Game = function () {};
 
@@ -91,6 +92,23 @@ BouncingStars.Game.prototype = {
             star.body.angularVelocity = (200 + Math.random() * 400) * this.game.rnd.pick([-1, 1]);
         }
 
+        this.mines = BouncingStars.game.add.group();
+        this.mines.enableBody = true;
+
+        for (var i = 0; i < Math.ceil(store.get('level') / 5); i++) {
+            var mine = this.mines.create(BouncingStars.game.world.randomX, BouncingStars.game.world.randomY, 'mine');
+            mine.body.collideWorldBounds = true;
+
+            mine.body.velocity.setTo((BouncingStars.baseMineVelocity + Math.random() * BouncingStars.baseMineVelocity) * this.game.rnd.pick([-1, 1]), (BouncingStars.baseMineVelocity + Math.random() * BouncingStars.baseMineVelocity) * this.game.rnd.pick([-1, 1]));
+
+            var bounce = Math.min(0.5 + (store.get('level') * 0.001), 0.95);
+            mine.body.bounce.setTo(bounce);
+
+            mine.anchor.setTo(0.5);
+
+            mine.body.angularVelocity = (200 + Math.random() * 400) * this.game.rnd.pick([-1, 1]);
+        }
+
         // Spawn upgrade runes time to time (chances are 1/10)
         if (this.game.rnd.pick([true, false, false, false, false, false, false, false, false, false])) {
             this.upgradeRunes = BouncingStars.game.add.group();
@@ -143,8 +161,9 @@ BouncingStars.Game.prototype = {
         this.remainingTimeText = this.game.add.text(25, 25, 'Remaining time: ' + store.get('upgrades.time').toFixed(1), style);
     },
     update: function () {
-        this.game.physics.arcade.collide(this.stars, this.shockwaves);
         this.game.physics.arcade.collide(this.stars, this.walls);
+        this.game.physics.arcade.collide(this.mines, this.walls);
+        this.game.physics.arcade.collide(this.stars, this.shockwaves);
         this.game.physics.arcade.collide(this.upgradeRunes, this.walls);
         this.game.physics.arcade.collide(BouncingStars.Player, this.walls);
 
@@ -156,6 +175,7 @@ BouncingStars.Game.prototype = {
         }
 
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
+        this.game.physics.arcade.overlap(BouncingStars.Player, this.mines, this.gameOver, null, this);
         this.game.physics.arcade.overlap(BouncingStars.Player, this.upgradeRunes, this.collectUpgradeRune, null, this);
         this.game.physics.arcade.overlap(this.massiveStars, this.walls, this.supernova, null, this);
         // this.game.physics.arcade.overlap(this.shockwaves, this.stars, this.shockwaveEffect, null, this);
