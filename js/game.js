@@ -151,6 +151,7 @@ BouncingStars.Game.prototype = {
         BouncingStars.collectSound = BouncingStars.game.add.audio('collectSound');
 
         this.timer = this.game.time.create();
+        this.timerEvent = this.timer.add(Phaser.Timer.SECOND * store.get('upgrades.time') * 0.7, this.remainingTimeAlert, this);
         this.timerEvent = this.timer.add(Phaser.Timer.SECOND * store.get('upgrades.time'), this.gameOver, this);
         this.timer.start();
 
@@ -256,7 +257,7 @@ BouncingStars.Game.prototype = {
         this.game.state.start('Shop');
         // this.game.state.start('GameOver');
     },
-    render: function () {
-        this.game.debug.body(this.shockwaves);
+    remainingTimeAlert: function () {
+        this.remainingTimeText.setStyle({fill: '#ff0000'});
     }
 };
