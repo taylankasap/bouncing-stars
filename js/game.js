@@ -27,7 +27,9 @@ if (typeof store.get('remainingUpgradePoints') === 'undefined') {
 BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
 BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
 BouncingStars.baseMineVelocity = BouncingStars.baseStarVelocity * 0.01;
-var emitter;
+
+var graphic;
+var startFadingTrail;
 
 BouncingStars.Game = function () {};
 
@@ -38,6 +40,10 @@ BouncingStars.Game.prototype = {
         // Shockwave created from massive star supernova
         this.shockwaves = BouncingStars.game.add.group();
         this.shockwaves.enableBody = true;
+
+        // Add graphics object before the player to implement z-index behavior
+        graphic = this.game.add.graphics(0, 0);
+        startFadingTrail = false;
 
         BouncingStars.playerVelocity = store.get('upgrades.velocity') * 1000;
         BouncingStars.baseStarVelocity = 1500 + (store.get('level') * 10);
@@ -51,22 +57,8 @@ BouncingStars.Game.prototype = {
         BouncingStars.Player.frame = 4;
         BouncingStars.Player.scale.setTo(store.get('upgrades.scale'));
 
-        // Create an emitter
-        emitter = this.game.add.emitter(0, 0, 3000);
-        emitter.makeParticles('particle');
-
-        // Attach the emitter to the sprite
-        // BouncingStars.Player.addChild(emitter);
-
-        // Position the emitter relative to the sprite's anchor location
-        emitter.x = 0;
-        emitter.y = 30;
-
-        // setup options for the emitter
-        emitter.gravity = 0;
-        emitter.lifespan = 500;
-        emitter.minParticleSpeed = new Phaser.Point(0, 0);
-        emitter.maxParticleSpeed = new Phaser.Point(0, 0);
+        graphic.moveTo(BouncingStars.Player.x, BouncingStars.Player.y);
+        graphic.lineStyle(2, 0xFF0000, 1);
 
         // Walls
         // We need to make walls thick so the sprites won't come too close to world bounds
@@ -173,6 +165,12 @@ BouncingStars.Game.prototype = {
         this.timerEvent = this.timer.add(Phaser.Timer.SECOND * store.get('upgrades.time'), this.gameOver, this);
         this.timer.start();
 
+        this.fadeTrailTimer = this.game.time.create();
+        this.fadeTrailTimer.add(Phaser.Timer.QUARTER * 1, function() {
+            startFadingTrail = true;
+        }, this);
+        this.fadeTrailTimer.start();
+
         // Remaining time
         var style = {
             fill: '#ecf0f1'
@@ -187,16 +185,19 @@ BouncingStars.Game.prototype = {
         this.game.physics.arcade.collide(BouncingStars.Player, this.walls);
 
         BouncingStars.Player.rotation = this.game.physics.arcade.moveToPointer(BouncingStars.Player, BouncingStars.playerVelocity) + Math.PI / 2;
-        // emitter.rotation = (this.game.physics.arcade.angleToPointer(emitter) + Math.PI / 2);
-        emitter.x = BouncingStars.Player.x;
-        emitter.y = BouncingStars.Player.y;
 
         // If it's overlapping the mouse, don't move any more
         if (Phaser.Rectangle.contains(BouncingStars.Player.body, this.game.input.x, this.game.input.y)) {
             BouncingStars.Player.body.velocity.setTo(0, 0);
-        } else {
-            // Emit a single particle every frame that the player is moving
-            emitter.emitParticle();
+        }
+
+        graphic.lineStyle(2, 0xffffff, 1);
+        graphic.lineTo(BouncingStars.Player.x, BouncingStars.Player.y);
+        if (startFadingTrail) {
+            console.log('deleting first point');
+            graphic.graphicsData.shift();
+            graphic.dirty = true;
+            graphic.clearDirty = true;
         }
 
         this.game.physics.arcade.overlap(BouncingStars.Player, this.stars, this.collectStar, null, this);
