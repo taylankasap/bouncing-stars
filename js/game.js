@@ -63,9 +63,10 @@ BouncingStars.Game.prototype = {
         emitter.y = 30;
 
         // setup options for the emitter
+        emitter.gravity = 0;
         emitter.lifespan = 500;
-        emitter.minParticleSpeed = new Phaser.Point(0, 50);
-        emitter.maxParticleSpeed = new Phaser.Point(0, 150);
+        emitter.minParticleSpeed = new Phaser.Point(0, 0);
+        emitter.maxParticleSpeed = new Phaser.Point(0, 0);
 
         // Walls
         // We need to make walls thick so the sprites won't come too close to world bounds
