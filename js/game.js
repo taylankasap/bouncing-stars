@@ -30,7 +30,7 @@ BouncingStars.baseMineVelocity = BouncingStars.baseStarVelocity * 0.01;
 
 var graphic;
 var startFadingTrail;
-
+var playerSpawnRectangle;
 BouncingStars.Game = function () {};
 
 BouncingStars.Game.prototype = {
@@ -50,6 +50,14 @@ BouncingStars.Game.prototype = {
 
         // Create player
         BouncingStars.Player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'dude');
+
+        // Save player spawn rectangle to later check to spawn other stuff
+        playerSpawnRectangle = new Phaser.Polygon([
+            new Phaser.Point(this.game.world.centerX - 200, this.game.world.centerY - 200),
+            new Phaser.Point(this.game.world.centerX + 200, this.game.world.centerY - 200),
+            new Phaser.Point(this.game.world.centerX + 200, this.game.world.centerY + 200),
+            new Phaser.Point(this.game.world.centerX - 200, this.game.world.centerY + 200)
+        ]);
 
         this.game.physics.arcade.enable(BouncingStars.Player);
 
@@ -106,7 +114,16 @@ BouncingStars.Game.prototype = {
         this.mines.enableBody = true;
 
         for (var i = 0; i < Math.ceil(store.get('level') / 5); i++) {
-            var mine = this.mines.create(BouncingStars.game.world.randomX, BouncingStars.game.world.randomY, 'mine');
+            var x = BouncingStars.game.world.randomX;
+            var y = BouncingStars.game.world.randomY;
+
+            // If mine is too close to the player, regenerate the random mine position
+            if (playerSpawnRectangle.contains(x, y)) {
+                i--;
+                continue;
+            }
+
+            var mine = this.mines.create(x, y, 'mine');
             mine.body.collideWorldBounds = true;
 
             mine.body.velocity.setTo((BouncingStars.baseMineVelocity + Math.random() * BouncingStars.baseMineVelocity) * this.game.rnd.pick([-1, 1]), (BouncingStars.baseMineVelocity + Math.random() * BouncingStars.baseMineVelocity) * this.game.rnd.pick([-1, 1]));
