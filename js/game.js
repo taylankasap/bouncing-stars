@@ -30,7 +30,6 @@ BouncingStars.baseMineVelocity = BouncingStars.baseStarVelocity * 0.01;
 
 var graphic;
 var startFadingTrail;
-var playerSpawnRectangle;
 BouncingStars.Game = function () {};
 
 BouncingStars.Game.prototype = {
@@ -52,7 +51,7 @@ BouncingStars.Game.prototype = {
         BouncingStars.Player = this.game.add.sprite(this.game.world.centerX, this.game.world.centerY, 'dude');
 
         // Save player spawn rectangle to later check to spawn other stuff
-        playerSpawnRectangle = new Phaser.Polygon([
+        var playerSpawnRectangle = new Phaser.Polygon([
             new Phaser.Point(this.game.world.centerX - 200, this.game.world.centerY - 200),
             new Phaser.Point(this.game.world.centerX + 200, this.game.world.centerY - 200),
             new Phaser.Point(this.game.world.centerX + 200, this.game.world.centerY + 200),
