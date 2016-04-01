@@ -67,6 +67,8 @@ BouncingStars.Game.prototype = {
         graphic.moveTo(BouncingStars.Player.x, BouncingStars.Player.y);
         graphic.lineStyle(2, 0xFF0000, 1);
 
+        var wallRectangles = [];
+
         // Walls
         // We need to make walls thick so the sprites won't come too close to world bounds
         // It causes some issues https://github.com/taylankasap/phaserjs-bounce-issue
@@ -76,18 +78,42 @@ BouncingStars.Game.prototype = {
         wall.width = 250;
         wall.height = this.game.world.height;
         wall.body.immovable = true;
+        wallRectangles.push(new Phaser.Polygon([
+            new Phaser.Point(wall.x, wall.y),
+            new Phaser.Point(wall.x + wall.width, wall.y),
+            new Phaser.Point(wall.x + wall.width, wall.y + wall.height),
+            new Phaser.Point(wall.x, wall.y + wall.height)
+        ]));
         var wall = this.walls.create(this.game.world.width - 75, 0, 'wall');
         wall.width = 250;
         wall.height = this.game.world.height;
         wall.body.immovable = true;
+        wallRectangles.push(new Phaser.Polygon([
+            new Phaser.Point(wall.x, wall.y),
+            new Phaser.Point(wall.x + wall.width, wall.y),
+            new Phaser.Point(wall.x + wall.width, wall.y + wall.height),
+            new Phaser.Point(wall.x, wall.y + wall.height)
+        ]));
         var wall = this.walls.create(0, -175, 'wall');
         wall.width = this.game.world.width;
         wall.height = 250;
         wall.body.immovable = true;
+        wallRectangles.push(new Phaser.Polygon([
+            new Phaser.Point(wall.x, wall.y),
+            new Phaser.Point(wall.x + wall.width, wall.y),
+            new Phaser.Point(wall.x + wall.width, wall.y + wall.height),
+            new Phaser.Point(wall.x, wall.y + wall.height)
+        ]));
         var wall = this.walls.create(0, this.game.world.height - 75, 'wall');
         wall.width = this.game.world.width;
         wall.height = 250;
         wall.body.immovable = true;
+        wallRectangles.push(new Phaser.Polygon([
+            new Phaser.Point(wall.x, wall.y),
+            new Phaser.Point(wall.x + wall.width, wall.y),
+            new Phaser.Point(wall.x + wall.width, wall.y + wall.height),
+            new Phaser.Point(wall.x, wall.y + wall.height)
+        ]));
 
         // Finally some stars to collect
         this.stars = BouncingStars.game.add.group();
@@ -118,6 +144,20 @@ BouncingStars.Game.prototype = {
 
             // If mine is too close to the player, regenerate the random mine position
             if (playerSpawnRectangle.contains(x, y)) {
+                i--;
+                continue;
+            }
+
+            // If mine is too close to the wall, regenerate the random mine position
+            try {
+                wallRectangles.forEach(function (rectangle) {
+                    console.log(rectangle);
+                    if (rectangle.contains(x, y)) {
+                        console.log('throwing');
+                        throw false;
+                    }
+                });
+            } catch(e) {
                 i--;
                 continue;
             }
