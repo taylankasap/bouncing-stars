@@ -236,7 +236,9 @@ BouncingStars.Game.prototype = {
     update: function () {
         this.game.physics.arcade.collide(this.stars, this.walls);
         this.game.physics.arcade.collide(this.mines, this.walls);
+        this.game.physics.arcade.collide(this.stars, this.mines);
         this.game.physics.arcade.collide(this.stars, this.shockwaves);
+        this.game.physics.arcade.collide(this.mines, this.shockwaves);
         this.game.physics.arcade.collide(this.upgradeRunes, this.walls);
         this.game.physics.arcade.collide(BouncingStars.Player, this.walls);
 
