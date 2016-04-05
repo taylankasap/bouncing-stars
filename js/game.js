@@ -151,9 +151,7 @@ BouncingStars.Game.prototype = {
             // If mine is too close to the wall, regenerate the random mine position
             try {
                 wallRectangles.forEach(function (rectangle) {
-                    console.log(rectangle);
                     if (rectangle.contains(x, y)) {
-                        console.log('throwing');
                         throw false;
                     }
                 });
