@@ -193,7 +193,7 @@ BouncingStars.Game.prototype = {
         }
 
         // Spawn massive stars time to time
-        if (this.game.rnd.pick([true])) {
+        if (this.game.rnd.pick([true, false, false, false])) {
             this.massiveStars = BouncingStars.game.add.group();
             this.massiveStars.enableBody = true;
 
